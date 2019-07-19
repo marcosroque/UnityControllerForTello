@@ -7,9 +7,13 @@ namespace UnityControllerForTello
 {
     public class TelloManager : MonoBehaviour
     {
-      
+        [Header("Roque temp improvements")]
+        [SerializeField]
+        private float maxDistance = 2;
 
-        public bool drawFlightPath = true, limitPathDistance = false;
+        [Header("Framework values")]
+        public bool drawFlightPath = true;
+        public bool limitPathDistance = false;
         private TelloVideoTexture telloVideoTexture;
         public float yaw, pitch, roll;
 
@@ -29,7 +33,7 @@ namespace UnityControllerForTello
         Transform ground, telloGround, telloModel, flightPointsParent;
         public bool tracking { get; private set; } = false;
         bool firstTrackinFrame = true;
-        Vector3 originPoint, originEuler;
+        Vector3 originPoint = new Vector3(), originEuler;
         bool updateReceived = false;
 
         //Tello api
@@ -195,8 +199,13 @@ namespace UnityControllerForTello
             var yDif = dif.y;
             var zDif = dif.z;
 
+            if (xDif != 0 && yDif != 0 && zDif != 0)
+            {
+                Debug.Log(string.Format("xDif: {0} | yDif: {1} | zDif: {2}", xDif, yDif, zDif));
+            }
+
             //valid tello frame
-            if (Mathf.Abs(xDif) < 2 & Mathf.Abs(yDif) < 2 & Mathf.Abs(zDif) < 2)
+            if (Mathf.Abs(xDif) < maxDistance & Mathf.Abs(yDif) < maxDistance & Mathf.Abs(zDif) < maxDistance)
             {
                 transform.position = currentPos;
                 transform.position += new Vector3(0, elevationOffset, 0);
@@ -214,7 +223,7 @@ namespace UnityControllerForTello
             }
             else
             {
-                Debug.Log("Tracking lost " + telloFrameCount);
+                Debug.Log("##### Tracking lost " + telloFrameCount);
                 validTrackingFrame = false;
                 // PlaceGameObject("Pre Offset " + telloFrameCount);
                 // transform.position += prevDeltaPos;
@@ -268,14 +277,14 @@ namespace UnityControllerForTello
         {
             var state = Tello.state;
 
-            posX = Tello.state.posY;
-            posY = -Tello.state.posZ;
-            posZ = Tello.state.posX;
+            posX = Tello.state.posX;
+            posY = -Tello.state.posY;
+            posZ = Tello.state.posZ;
 
             quatW = state.quatW;
-            quatX = state.quatW;
-            quatY = state.quatW;
-            quatZ = state.quatW;
+            quatX = state.quatX;
+            quatY = state.quatY;
+            quatZ = state.quatZ;
 
             var eulerInfo = state.toEuler();
 

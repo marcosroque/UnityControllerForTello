@@ -40,7 +40,7 @@ namespace UnityControllerForTello
         {
             if(currentTargetPoint != targetPoint)
             {
-                Debug.Log("Set new target point");
+                Debug.Log("***** Set new target point");
                 currentTargetPoint = targetPoint;
                 targetDist = Vector3.Distance(sceneManager.activeDrone.position,currentTargetPoint.position);
                 pointAssignedEuler = sceneManager.activeDrone.eulerAngles;
@@ -120,7 +120,7 @@ namespace UnityControllerForTello
         {
             if (!enabled)
             {
-                Debug.Log("AutoPilot Enabled");
+                Debug.Log("##### AutoPilot Enabled");
                 targetDrone.gameObject.SetActive(true);
                 targetDrone.position = sceneManager.activeDrone.position;
                 UpdatePIDValues(PIDprofile);

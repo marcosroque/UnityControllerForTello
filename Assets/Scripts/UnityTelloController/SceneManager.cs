@@ -127,7 +127,7 @@ namespace UnityControllerForTello
             bool receivedInput = true;
             if (inputs.w == 0 & inputs.x == 0 & inputs.y == 0 & inputs.z == 0)
                 receivedInput = false;
-            if (receivedInput & autoPilot.enabled)
+            if (receivedInput & autoPilot.pilotEnabled)
             {
                 Debug.Log("AutoPilot disabled due to user input");
                 ToggleAutoPilot(false);
@@ -142,7 +142,7 @@ namespace UnityControllerForTello
                         break;
                     case FlightStatus.Flying:
                         bool validFrame = telloManager.SetTelloPosition();
-                        if (!validFrame & autoPilot.enabled)
+                        if (!validFrame & autoPilot.pilotEnabled)
                         {
                             Debug.Log("AutoPilot disabled because Tello Lost Tracking");
                             ToggleAutoPilot(false);
@@ -150,7 +150,7 @@ namespace UnityControllerForTello
                         break;
                 }
             }
-            if (autoPilot.enabled)
+            if (autoPilot.pilotEnabled)
             {
                 inputs = autoPilot.RunAutoPilot(telloDeltaTime);
             }
@@ -235,12 +235,13 @@ namespace UnityControllerForTello
         }
         public void Land()
         {
+            autoPilot.ToggleAutoPilot(false);
             telloManager.OnLand();
         }
         public void ToggleAutoPilot(bool active)
         {
           //  inputController.headLessMode = active;
-            autoPilot.ToggleAutoPilot(active);
+            autoPilot.ToggleAutoPilot(!autoPilot.pilotEnabled);
         }
         public void SetHomePoint(Vector3 globalPos)
         {
@@ -266,7 +267,7 @@ namespace UnityControllerForTello
         {
             bool autoPilotActive = false;
             if (autoPilot)
-                autoPilotActive = autoPilot.enabled;
+                autoPilotActive = autoPilot.pilotEnabled;
 
             if (inputController.headLessMode || autoPilotActive)
             {
@@ -296,7 +297,7 @@ namespace UnityControllerForTello
                 }
             }
 
-            if (autoPilot.enabled)
+            if (autoPilot.pilotEnabled)
                 inputController.speed = 1;
 
             elv *= inputController.speed;

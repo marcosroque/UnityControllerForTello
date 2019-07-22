@@ -20,12 +20,14 @@ namespace UnityControllerForTello
         float targetDist;
         public float targetSpeed;
 
+        public bool pilotEnabled;
+
         private void Awake()
         {
             sceneManager = FindObjectOfType<SceneManager>();
             targetDrone = GameObject.Find("Target Tello").transform;
             targetDrone.gameObject.SetActive(false);
-            enabled = false;
+            pilotEnabled = false;
         }
 
         public void SetHomePoint(Vector3 position)
@@ -118,22 +120,22 @@ namespace UnityControllerForTello
         }
         void ToggleAutoPilotOn()
         {
-            if (!enabled)
+            if (!pilotEnabled)
             {
                 Debug.Log("##### AutoPilot Enabled");
                 targetDrone.gameObject.SetActive(true);
                 targetDrone.position = sceneManager.activeDrone.position;
                 UpdatePIDValues(PIDprofile);
-                enabled = true;
+                pilotEnabled = true;
             }
         }
         void ToggleAutoPilotOff()
         {
-            if (enabled)
+            if (pilotEnabled)
             {
                 Debug.Log("AutoPilot Disabled");
                 targetDrone.gameObject.SetActive(false);
-                enabled = false;
+                pilotEnabled = false;
             }
         }
         void UpdatePIDValues(PIDProfile newPIDprofile)

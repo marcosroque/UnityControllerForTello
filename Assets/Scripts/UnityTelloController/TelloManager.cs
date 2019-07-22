@@ -199,11 +199,6 @@ namespace UnityControllerForTello
             var yDif = dif.y;
             var zDif = dif.z;
 
-            if (xDif != 0 && yDif != 0 && zDif != 0)
-            {
-                Debug.Log(string.Format("xDif: {0} | yDif: {1} | zDif: {2}", xDif, yDif, zDif));
-            }
-
             //valid tello frame
             if (Mathf.Abs(xDif) < maxDistance & Mathf.Abs(yDif) < maxDistance & Mathf.Abs(zDif) < maxDistance)
             {
@@ -223,7 +218,7 @@ namespace UnityControllerForTello
             }
             else
             {
-                Debug.Log("##### Tracking lost " + telloFrameCount);
+                Debug.Log("***** Tracking lost " + telloFrameCount);
                 validTrackingFrame = false;
                 // PlaceGameObject("Pre Offset " + telloFrameCount);
                 // transform.position += prevDeltaPos;

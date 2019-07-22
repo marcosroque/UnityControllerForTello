@@ -227,7 +227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab181b599e4feeb4fa1e4d4c66d89586, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneType: 1
+  sceneType: 0
   flightStatus: 0
   connectionState: 0
   activeDrone: {fileID: 0}
@@ -290,9 +290,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 608e8547d3ccabb4d88a69fe3025f1dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PIDprofile: {fileID: 1447179867}
+  PIDprofile: {fileID: 0}
   targetPoint: {fileID: 1176452336}
-  targetSpeed: 0.18
+  targetSpeed: 0.1
+  pilotEnabled: 0
 --- !u!1 &39486190
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,7 +452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bdde6dcc358fa94887c2ae6aa9b3200, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDistance: 2
+  maxDistance: 20
   drawFlightPath: 0
   limitPathDistance: 0
   yaw: 0
@@ -2295,7 +2296,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1176452335}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.15200001, z: 0}
+  m_LocalPosition: {x: 0, y: 0.53, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 154059212}

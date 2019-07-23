@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace TelloLib
 {
@@ -31,6 +32,11 @@ namespace TelloLib
         public static int iFrameRate = 5;//How often to ask for iFrames in 50ms. Ie 2=10x 5=4x 10=2xSecond 5 = 4xSecond
 
         private static ushort sequence = 1;
+
+        public static void SendStringMessage(string strMessage)
+        {
+            client.Send(strMessage);
+        }
 
         public enum ConnectionState
         {
@@ -511,7 +517,7 @@ namespace TelloLib
         private static UInt32 picExtraPackets;
         public static bool picDownloading;
         private static int maxPieceNum = 0;
-        private static UdpListener videoServer;
+        private static UdpListener videoServer, responseServer;
 
         private static void startListeners()
         {
@@ -786,6 +792,25 @@ namespace TelloLib
                 }, token);
             }
 
+            // Roque Listener
+            if (responseServer == null)
+                responseServer = new UdpListener(8890);
+            Task.Factory.StartNew(async () =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        var received = await responseServer.Receive();
+                        Debug.Log("received.Message: " + received.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.Log("responseServer.received.Message: " + ex.Message);
+                    }
+                }
+            }
+            );
         }
 
         public delegate float[] getControllerDeligate();

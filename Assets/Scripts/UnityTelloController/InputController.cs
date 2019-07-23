@@ -48,6 +48,10 @@ namespace UnityControllerForTello
             {
                 sceneManager.Land();
             }
+            else if (Input.GetKeyDown(KeyCode.B))
+            {
+                GetComponent<TelloBasicSequence>().StartDemo();
+            }
         }
         public Quaternion CheckFlightInputs()
         {          

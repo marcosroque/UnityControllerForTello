@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -554,7 +555,15 @@ namespace TelloLib
                             }
                         }
 
-                        int cmdId = ((int)received.bytes[5] | ((int)received.bytes[6] << 8));
+                        int cmdId = 0;
+                        if (received.bytes.Length < 10)
+                        {
+                            Debug.Log(received.Sender + " |-| " + received.Message);
+                        }
+                        else
+                        {
+                            cmdId = ((int)received.bytes[5] | ((int)received.bytes[6] << 8));
+                        }
 
                         if (cmdId >= 74 && cmdId < 80)
                         {
@@ -732,7 +741,7 @@ namespace TelloLib
                         catch (Exception ex)
                         {
                             //Fixed. Update errors do not cause disconnect.
-                            Console.WriteLine("onUpdate error:" + ex.Message);
+                            Debug.Log("onUpdate error:" + ex.Message);
                             //break;
                         }
 
@@ -741,7 +750,7 @@ namespace TelloLib
 
                     catch (Exception eex)
                     {
-                        Console.WriteLine("Receive thread error:" + eex.Message);
+                        Debug.Log("Receive thread error:" + eex.Message);
                         disconnect();
                         break;
                     }
@@ -791,10 +800,17 @@ namespace TelloLib
                     }
                 }, token);
             }
+        }
+
+        public static void RoqueListener()
+        {
+            Debug.Log("RoqueListener");
+
+            CancellationToken token = cancelTokens.Token;
 
             // Roque Listener
             if (responseServer == null)
-                responseServer = new UdpListener(8890);
+                responseServer = new UdpListener(new IPEndPoint(IPAddress.Parse("0.0.0.0"), 8890));
             Task.Factory.StartNew(async () =>
             {
                 while (true)
@@ -802,15 +818,14 @@ namespace TelloLib
                     try
                     {
                         var received = await responseServer.Receive();
-                        Debug.Log("received.Message: " + received.Message);
+                        Debug.Log("*** received.Message: " + received.Message + " | Sender: " + received.Sender);
                     }
                     catch (Exception ex)
                     {
-                        Debug.Log("responseServer.received.Message: " + ex.Message);
+                        Debug.Log("*** responseServer.received.Message: " + ex.Message);
                     }
                 }
-            }
-            );
+            }, token);
         }
 
         public delegate float[] getControllerDeligate();
